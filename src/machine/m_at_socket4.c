@@ -84,6 +84,36 @@ machine_at_sp4_common_init(const machine_t *model)
 }
 
 int
+machine_at_acerm3_init(const machine_t *model)
+{
+    int ret;
+
+    ret = bios_load_linear("roms/machines/acerm3/M3_U38_V2.0-R01-G0.BIN",
+                           0x000e0000, 131072, 0);
+
+    if (bios_only || !ret)
+        return ret;
+
+    machine_at_common_init(model);
+
+    pci_init(PCI_CONFIG_TYPE_2 | PCI_NO_IRQ_STEERING);
+    pci_register_slot(0x00, PCI_CARD_NORTHBRIDGE, 0, 0, 0, 0);
+    pci_register_slot(0x01, PCI_CARD_IDE,         0, 0, 0, 0);
+    pci_register_slot(0x0f, PCI_CARD_NORMAL,      1, 2, 3, 4);
+    pci_register_slot(0x0c, PCI_CARD_NORMAL,      2, 3, 4, 1);
+    pci_register_slot(0x0b, PCI_CARD_NORMAL,      3, 4, 1, 2);
+    pci_register_slot(0x02, PCI_CARD_SOUTHBRIDGE, 0, 0, 0, 0);
+    device_add(&i430lx_device);	
+    device_add(&sio_zb_device);	
+    device_add(&keyboard_ps2_acer_pci_device);
+    device_add(&ide_cmd640_pci_device);	
+    device_add(&pc87332_device);
+    device_add(&intel_flash_bxt_device);
+
+    return ret;
+}
+
+int
 machine_at_excaliburpci_init(const machine_t *model)
 {
     int ret;
