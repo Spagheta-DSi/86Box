@@ -1176,10 +1176,7 @@ svga_do_render(svga_t *svga)
     }
 
     if (!svga->override) {
-        if (svga->render_override)
-            svga->render_override(svga->priv_parent);
-        else
-            svga->render(svga);
+        svga->render(svga);
 
         svga->x_add = (svga->monitor->mon_overscan_x >> 1);
         svga_render_overscan_left(svga);
